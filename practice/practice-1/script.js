@@ -72,6 +72,8 @@ closeModal.addEventListener('click', function (){
 openModal.addEventListener('click', function (){
     modal.classList.remove('close')
 })
-overlay.addEventListener('click', function (){
-    modal.classList.add('close')
+
+overlay.addEventListener('click', function (event){
+    if(event.target.classList.contains('modal-overlay'))modal.classList.add('close')
+
 })
