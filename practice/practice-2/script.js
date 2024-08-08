@@ -1,29 +1,30 @@
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('https://jsonplaceholder.typicode.com/posts')
-        .then(response => response.json())
-        .then(data => {
-            let postsBody = document.getElementById('postsBody');
-            data.forEach(post => {
-                let row = document.createElement('tr');
+const tableBody = document.getElementById('tableBody')
+const loading = document.querySelector('.loading')
 
-                let cellUserId = document.createElement('td');
-                cellUserId.textContent = post.userId;
-                row.appendChild(cellUserId);
+async function fetchPosts() {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+    const data = await response.json()
+    return data
+}
 
-                let cellId = document.createElement('td');
-                cellId.textContent = post.id;
-                row.appendChild(cellId);
+function renderTable(data) {
+    tableBody.innerHTML = ''
 
-                let cellTitle = document.createElement('td');
-                cellTitle.textContent = post.title;
-                row.appendChild(cellTitle);
+    data.forEach(post => {
+        const row = document.createElement('tr')
+        row.innerHTML = `
+                <td>${post.userId}</td>
+                <td>${post.id}</td>
+                <td>${post.title}</td>
+                <td>${post.body}</td>
+            `;
+        tableBody.appendChild(row)
+    });
+}
 
-                let cellBody = document.createElement('td');
-                cellBody.textContent = post.body;
-                row.appendChild(cellBody);
-
-                postsBody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Ошибка:', error));
-});
+document.addEventListener('DOMContentLoaded', async () => {
+    loading.classList.add('active')
+    const posts = await fetchPosts()
+    renderTable(posts);
+    loading.classList.remove('active')
+})
